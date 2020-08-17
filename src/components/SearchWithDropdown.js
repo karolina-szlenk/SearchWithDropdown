@@ -12,7 +12,13 @@ function SearchWithDropdown() {
     changeDropdownListVisibility(e.target.value)
   }
 
-  const filterData = data.filter((el) => el.toLowerCase().includes(value))
+  const sortData = (item1, item2) => {
+    item1 = item1.toLowerCase();
+    item2 = item2.toLowerCase();
+    return item1 > item2 ? 1 : item2 > item1 ? -1 : 0
+  }
+
+  const filterData = data.filter((el) => el.toLowerCase().includes(value)).sort(sortData)
 
   const changeDropdownListVisibility = (value) => {
     return value.length >= 3 ? setIsVisible(true) : setIsVisible(false)
