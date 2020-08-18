@@ -34,7 +34,7 @@ function SearchWithDropdown() {
       <input type="text" placeholder="Search..." value={value} onChange={handleChange}></input>
       {isVisible ? (
         filteredData.length > 0 ? (
-          <DropdownList filteredData={filteredData} isVisible={isVisible} />
+          <DropdownList filteredData={filteredData} />
         ) : (
           <div>Not found!</div>
         )
