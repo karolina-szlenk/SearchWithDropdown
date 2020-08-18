@@ -2,11 +2,11 @@ import React from 'react'
 import DropdownItem from './DropdownItem'
 
 function DropdownList(props) {
-  console.log(props.filterData)
+  const renderData = () =>
+    props.filteredData.map((el) => <DropdownItem key={el}>{el}</DropdownItem>)
 
-  const renderData = () => props.filterData.map((el) => <DropdownItem key={el}>{el}</DropdownItem>)
-
-  return <div>{props.isVisible ? renderData() : null}</div>
+  return <div>{renderData()}</div>
 }
 
 export default DropdownList
+
