@@ -1,6 +1,6 @@
 import React from 'react'
 
-function DropdownItem(props) {
+const DropdownItem: React.FC<{}> = (props) => {
   return <div>{props.children}</div>
 }
 
