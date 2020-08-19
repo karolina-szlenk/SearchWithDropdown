@@ -1,11 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import DropdownList from './DropdownList'
-import { data } from '../data'
 
 const reactStringReplace = require('react-string-replace')
+const url = 'https://restcountries.eu/rest/v2/all'
+
+interface Country {
+  name: string
+}
 
 const SearchWithDropdown: React.FC = () => {
+  const [countries, setCountries] = useState<any>([])
   const [value, setValue] = useState('')
+  const [filteredCountries, setFilteredCountries] = useState([])
   const [isVisible, setIsVisible] = useState(false)
 
   const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
@@ -20,25 +26,38 @@ const SearchWithDropdown: React.FC = () => {
     return item1 > item2 ? 1 : item2 > item1 ? -1 : 0
   }
 
-  const filteredData = data
-    .filter((el) => el.toLowerCase().includes(value))
-    .sort(sortData)
-    .map((text) =>
-      reactStringReplace(text, value, (match: string, i: number) => (
-        <strong key={i}>{match}</strong>
-      ))
-    )
-
   const changeResultVisibility = (value: string) => {
     return value.length >= 3 ? setIsVisible(true) : setIsVisible(false)
   }
+
+  useEffect(() => {
+    async function fetchMyAPI() {
+      let response = await fetch(url)
+      const json = await response.json()
+      setCountries(json.map((el: Country) => el.name))
+    }
+    fetchMyAPI()
+  }, [])
+
+  useEffect(() => {
+    setFilteredCountries(
+      countries
+        .filter((el: string) => el.toLowerCase().includes(value))
+        .sort(sortData)
+        .map((text: string) =>
+          reactStringReplace(text, value, (match: string, i: number) => (
+            <strong key={i}>{match}</strong>
+          ))
+        )
+    )
+  }, [value, countries])
 
   return (
     <div>
       <input type="text" placeholder="Search..." value={value} onChange={handleChange}></input>
       {isVisible ? (
-        filteredData.length > 0 ? (
-          <DropdownList filteredData={filteredData} />
+        filteredCountries.length > 0 ? (
+          <DropdownList filteredCountries={filteredCountries} />
         ) : (
           <div>Not found!</div>
         )
@@ -48,4 +67,3 @@ const SearchWithDropdown: React.FC = () => {
 }
 
 export default SearchWithDropdown
-
