@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import DropdownList from './DropdownList'
 
-const reactStringReplace = require('react-string-replace')
 const url = 'https://restcountries.eu/rest/v2/all'
 
 interface Country {
@@ -14,10 +13,10 @@ const SearchWithDropdown: React.FC = () => {
   const [filteredCountries, setFilteredCountries] = useState([])
   const [isVisible, setIsVisible] = useState(false)
 
-  const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
-    event.preventDefault()
-    setValue(event.currentTarget.value)
-    changeResultVisibility(event.currentTarget.value)
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target
+    setValue(value)
+    changeResultVisibility(value)
   }
 
   const sortData = (item1: string, item2: string) => {
@@ -41,14 +40,7 @@ const SearchWithDropdown: React.FC = () => {
 
   useEffect(() => {
     setFilteredCountries(
-      countries
-        .filter((el: string) => el.toLowerCase().includes(value))
-        .sort(sortData)
-        .map((text: string) =>
-          reactStringReplace(text, value, (match: string, i: number) => (
-            <strong key={i}>{match}</strong>
-          ))
-        )
+      countries.filter((el: string) => el.toLowerCase().includes(value)).sort(sortData)
     )
   }, [value, countries])
 
@@ -57,7 +49,7 @@ const SearchWithDropdown: React.FC = () => {
       <input type="text" placeholder="Search..." value={value} onChange={handleChange}></input>
       {isVisible ? (
         filteredCountries.length > 0 ? (
-          <DropdownList filteredCountries={filteredCountries} />
+          <DropdownList filteredCountries={filteredCountries} value={value} />
         ) : (
           <div>Not found!</div>
         )
