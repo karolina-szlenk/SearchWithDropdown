@@ -19,30 +19,27 @@ const SearchWithDropdown: React.FC = () => {
     changeResultVisibility(value)
   }
 
-  const sortData = (item1: string, item2: string) => {
-    item1 = item1.toLowerCase()
-    item2 = item2.toLowerCase()
-    return item1 > item2 ? 1 : item2 > item1 ? -1 : 0
-  }
-
   const changeResultVisibility = (value: string) => {
     return value.length >= 3 ? setIsVisible(true) : setIsVisible(false)
   }
 
   useEffect(() => {
-    async function fetchMyAPI() {
+    const fetchMyAPI = async () => {
       let response = await fetch(url)
       const json = await response.json()
-      setCountries(json.map((el: Country) => el.name))
+      setCountries(json)
     }
     fetchMyAPI()
   }, [])
 
   useEffect(() => {
     setFilteredCountries(
-      countries.filter((el: string) => el.toLowerCase().includes(value)).sort(sortData)
+      countries
+        .filter((el: Country) => el.name.toLowerCase().includes(value))
     )
   }, [value, countries])
+
+  console.log(countries)
 
   return (
     <div>

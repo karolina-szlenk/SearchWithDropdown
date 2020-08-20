@@ -5,7 +5,7 @@ import './App.css'
 const App: React.FC = () => {
   return (
     <div className="App">
-      <h2>My awesome Dropdown</h2>
+      <h2 data-testid="h2-element">My awesome Dropdown</h2>
       <SearchWithDropdown />
     </div>
   )
