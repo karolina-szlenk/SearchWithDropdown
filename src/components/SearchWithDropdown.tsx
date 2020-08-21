@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import DropdownList from './DropdownList'
+import { Country } from '../myModule'
 
 const url = 'https://restcountries.eu/rest/v2/all'
 
-interface Country {
-  name: string
-}
-
 const SearchWithDropdown: React.FC = () => {
-  const [countries, setCountries] = useState<any>([])
+  const [countries, setCountries] = useState<Array<Country>>([])
   const [value, setValue] = useState('')
-  const [filteredCountries, setFilteredCountries] = useState([])
+  const [filteredCountries, setFilteredCountries] = useState<Array<Country>>([])
   const [isVisible, setIsVisible] = useState(false)
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,7 +17,7 @@ const SearchWithDropdown: React.FC = () => {
   }
 
   const changeResultVisibility = (value: string) => {
-    return value.length >= 3 ? setIsVisible(true) : setIsVisible(false)
+    setIsVisible(value.length >= 3)
   }
 
   useEffect(() => {
@@ -32,14 +29,15 @@ const SearchWithDropdown: React.FC = () => {
     fetchMyAPI()
   }, [])
 
-  useEffect(() => {
-    setFilteredCountries(
-      countries
-        .filter((el: Country) => el.name.toLowerCase().includes(value))
-    )
-  }, [value, countries])
 
-  console.log(countries)
+  useEffect(() => {
+    if (value.length >= 3 && countries) {
+      setFilteredCountries(
+        countries
+          .filter((el: Country) => el.name.toLowerCase().includes(value))
+      )
+    }
+  }, [value, countries])
 
   return (
     <div>

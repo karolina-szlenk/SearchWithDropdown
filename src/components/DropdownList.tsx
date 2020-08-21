@@ -1,33 +1,32 @@
 import React from 'react'
 import DropdownItem from './DropdownItem'
+import { Country } from '../myModule'
 
 const reactStringReplace = require('react-string-replace')
 
 interface DropdownListProps {
-  filteredCountries: any[]
+  filteredCountries: Country[]
   value: string
 }
 
-interface MyInterface {
-  type: string;
+function sortData (c1: Country, c2: Country): number {
+  const name1 = c1.name.toLowerCase()
+  const name2 = c2.name.toLowerCase()
+  return name1 > name2 ? 1 : name2 > name1 ? -1 : 0
 }
 
-function sortData (item1: MyInterface, item2: MyInterface): number {
-  return item1 > item2 ? 1 : item2 > item1 ? -1 : 0
-}
-
-const DropdownList: React.FC<DropdownListProps> = (props) => {
-  console.log(props.filteredCountries)
+const DropdownList: React.FC<DropdownListProps> = ({ filteredCountries, value }) => {
   const renderData = () =>
-    props.filteredCountries
-      .map((el) => (
-        <DropdownItem key={el.name}>
-          {reactStringReplace(el.name, props.value, (match: string, i: number) => (
-            <strong key={i}>{match}</strong>
-          ))}
-        </DropdownItem>
-      ))
-      .sort(sortData)
+    filteredCountries
+    .sort(sortData)
+    .map((el) => (
+      <DropdownItem key={el.name}>
+        {reactStringReplace(el.name, value, (match: string, i: number) => (
+          <strong key={i}>{match}</strong>
+        ))}
+      </DropdownItem>
+    ))
+    
 
   return <div>{renderData()}</div>
 }
